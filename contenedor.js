@@ -3,7 +3,7 @@ const fs = require('fs');
 module.exports = class Contenedor {
     constructor(nombre){
         this.nombre = nombre
-        this.id=0
+        this.id = 1
     }
     store(object){
         let data = fs.readFileSync(`./${this.nombre}`,'utf-8');
@@ -13,6 +13,7 @@ module.exports = class Contenedor {
         this.id++
         productList.push(product)
         fs.writeFileSync(`./${this.nombre}`,JSON.stringify({products:productList}))
+        return product;
     }
     getById(id){
         let data = fs.readFileSync(`./${this.nombre}`,'utf-8');
@@ -23,6 +24,19 @@ module.exports = class Contenedor {
         } else {
             return {error: 'Producto no encontrado'}
         }
+    }
+    update(id,{title,price,thumbnail}){
+        let product = this.getById(id);
+        for (let key in product) {
+            if (key =='title') {
+                product.title = title
+            } else if (key == 'price') {
+                product.price = price
+            } else {
+                product.thumbnail = thumbnail
+            }
+        }
+        return product
     }
     getAll(){
         let data = fs.readFileSync(`./${this.nombre}`,'utf-8');
